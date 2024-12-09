@@ -8,7 +8,7 @@ const Shop = () => {
         {/* Editor */}
         <div className="w-full max-w-[607px] mx-auto mb-8 text-center">
           <h1 className="font-semibold text-xl md:text-2xl leading-8 text-[#252B42] mb-2">
-            EDITOR'S PICK
+            EDITOR&apos;S PICK
           </h1>
           <p className="text-base md:text-lg leading-5 text-[#737373]">
             Problems trying to resolve the conflict between

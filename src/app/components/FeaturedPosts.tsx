@@ -2,6 +2,7 @@ import React from "react";
 import { CiAlarmOn } from "react-icons/ci";
 import { FaChartArea } from "react-icons/fa";
 import { FaGreaterThan } from "react-icons/fa6";
+import Image from "next/image";
 
 const FeaturedPosts = () => {
   const posts = [
@@ -67,7 +68,7 @@ const FeaturedPosts = () => {
             className="w-full max-w-[348px] mx-auto h-auto bg-white shadow-md rounded-lg overflow-hidden"
           >
             <div className="relative">
-              <img
+              <Image
                 src={post.img}
                 alt={post.title}
                 className="w-full h-[300px] object-cover"

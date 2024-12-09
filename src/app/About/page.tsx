@@ -212,7 +212,7 @@ const About = () => {
           <div className="w-full sm:w-[438px] h-auto sm:h-[238px] sm:ml-14 text-center sm:text-left">
             <h2 className="text-white text-sm font-bold mb-4">WORK WITH US</h2>
             <h1 className="text-white text-2xl sm:text-4xl font-bold mb-6">
-              Now Let's grow Yours
+              Now Let&apos;s grow Yours
             </h1>
             <p className="text-white/90 text-sm mb-8 px-4 sm:px-0">
               The gradual accumulation of information about atomic and 
