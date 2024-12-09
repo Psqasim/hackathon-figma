@@ -14,7 +14,7 @@ const FeaturedPosts = () => {
       title: "Loudest à la Madison #1 (L'Integrál)",
       description:
         "We focus on ergonomics and meeting you where you work. It's only a keystroke away.",
-      img: "/Post1.jpg",
+      pic: "/Post1.jpg",
       date: "22 April 2021",
       comments: 10,
       tag: "NEW",
@@ -27,7 +27,7 @@ const FeaturedPosts = () => {
       title: "Loudest à la Madison #1 (L'Integrál)",
       description:
         "We focus on ergonomics and meeting you where you work. It's only a keystroke away.",
-      img: "/Post2.jpg",
+      pic: "/Post2.jpg",
       date: "22 April 2021",
       comments: 10,
       tag: "Trending",
@@ -40,7 +40,7 @@ const FeaturedPosts = () => {
       title: "Loudest à la Madison #1 (L'Integrál)",
       description:
         "We focus on ergonomics and meeting you where you work. It's only a keystroke away.",
-      img: "/Post3.jpg",
+      pic: "/Post3.jpg",
       date: "22 April 2021",
       comments: 10,
       tag: "Hot",
@@ -69,7 +69,7 @@ const FeaturedPosts = () => {
           >
             <div className="relative">
               <Image
-                src={post.img}
+                src={post.pic}
                 alt={post.title}
                 className="w-full h-[300px] object-cover"
               />
