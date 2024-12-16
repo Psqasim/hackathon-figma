@@ -26,12 +26,12 @@ const Navbar: React.FC = () => {
         {/* Navigation */}
         <ul className="flex items-center gap-6 text-gray-700">
           <Link href="/">Home</Link>
-          <Link href="#" className="flex items-center">
+          <Link href="/Shop" className="flex items-center">
             Shop <RiArrowDropDownLine className="text-2xl" />
           </Link>
           <Link href="/About">About</Link>
           <Link href="#">Blog</Link>
-          <Link href="#">Contact</Link>
+          <Link href="/Contact">Contact</Link>
           <Link href="#">Pages</Link>
         </ul>
 
@@ -69,12 +69,13 @@ const Navbar: React.FC = () => {
         <div className="absolute top-16 left-0 w-full bg-white shadow-lg p-4 z-50">
           <ul className="flex flex-col gap-4 text-gray-700">
             <Link href="/">Home</Link>
-            <Link href="#" className="flex items-center">
-              Shop <RiArrowDropDownLine className="text-2xl" />
+            <Link href="/Shop" className="flex items-center">
+              Shop 
+            <RiArrowDropDownLine className="text-2xl" />
             </Link>
             <Link href="/About">About</Link>
             <Link href="#">Blog</Link>
-            <Link href="#">Contact</Link>
+            <Link href="/Contact">Contact</Link>
             <Link href="#">Pages</Link>
           </ul>
           <div className="mt-4 flex flex-col gap-4 text-blue-500">

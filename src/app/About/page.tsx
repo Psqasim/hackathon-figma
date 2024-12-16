@@ -12,6 +12,8 @@ import workgirl from "/public/workgirl.png";
 import { FaFacebook } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
+import Footer from "../components/Footer";
+import { useState } from "react";
 
 const teamMembers = [
   {
@@ -32,18 +34,80 @@ const teamMembers = [
 ];
 
 const About = () => {
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+    const toggleMenu = () => {
+      setIsMenuOpen(!isMenuOpen);
+    };
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Navigation */}
-      <nav className="flex items-center justify-between py-4 sm:py-6">
-        <div className="font-bold text-lg sm:text-xl">Bandage</div>
+      <nav className="flex items-center justify-between py-4 sm:py-6 relative">
+        <div className="font-bold text-lg sm:text-xl z-20">Bandage</div>
+        
+        {/* Mobile Menu Toggle */}
+        <div className="md:hidden z-20">
+          <button 
+            onClick={toggleMenu} 
+            className="focus:outline-none"
+          >
+            {isMenuOpen ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
+        </div>
+
+        {/* Desktop Navigation Links */}
         <div className="hidden md:flex items-center space-x-4 sm:space-x-8">
           <a href="/" className="text-gray-600 text-sm sm:text-base">Home</a>
           <a href="#" className="text-gray-600 text-sm sm:text-base">Product</a>
           <a href="#" className="text-gray-600 text-sm sm:text-base">Pricing</a>
           <a href="/Contact" className="text-gray-600 text-sm sm:text-base">Contact</a>
         </div>
-        <div className="flex items-center space-x-2 sm:space-x-4">
+
+        {/* Mobile Navigation Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg">
+            <div className="flex flex-col items-center py-4 space-y-4">
+              <a href="/" className="text-gray-600">Home</a>
+              <a href="#" className="text-gray-600">Product</a>
+              <a href="#" className="text-gray-600">Pricing</a>
+              <a href="/Contact" className="text-gray-600">Contact</a>
+              <div className="flex flex-col items-center space-y-2">
+                <a href="#" className="text-blue-500">Login</a>
+                <a
+                  href="#"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center"
+                >
+                  Become a member
+                  <svg
+                    className="w-4 h-4 ml-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Desktop User Actions */}
+        <div className="hidden md:flex items-center space-x-2 sm:space-x-4">
           <a href="#" className="text-blue-500 text-sm sm:text-base">Login</a>
           <a
             href="#"
@@ -193,14 +257,19 @@ const About = () => {
               the two major realms of Classical physics: Newtonian mechanics
             </p>
             {/* Logos */}
-            <div className="w-full h-auto sm:h-[175px] mt-4 flex flex-wrap justify-center sm:justify-evenly items-center gap-4 sm:gap-3">
-              <Image src={brand1} alt="brand-logo" className="w-16 sm:w-[103px] h-auto" />
-              <Image src={brand2} alt="brand-logo" className="w-16 sm:w-[85px] h-auto" />
-              <Image src={brand3} alt="brand-logo" className="w-16 sm:w-[105px] h-auto" />
-              <Image src={brand4} alt="brand-logo" className="w-16 sm:w-[105px] h-auto" />
-              <Image src={brand5} alt="brand-logo" className="w-16 sm:w-[104px] h-auto" />
-              <Image src={brand6} alt="brand-logo" className="w-16 sm:w-[76px] h-auto" />
+            <div className="w-full py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4 justify-center items-center">
+          {[brand1, brand2, brand3, brand4, brand5, brand6].map((brand, index) => (
+            <div key={index} className="flex justify-center">
+              <Image
+                src={brand}
+                alt={`brand-logo-${index + 1}`}
+                className="w-16 sm:w-24 h-auto"
+              />
             </div>
+          ))}
+        </div>
+      </div>
           </div>
         </div>
       </div>
@@ -233,6 +302,7 @@ const About = () => {
           />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

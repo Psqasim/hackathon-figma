@@ -1,3 +1,5 @@
+
+import Link from "next/link";
 import React from "react";
 
 const Hero = () => {
@@ -15,9 +17,11 @@ const Hero = () => {
             We know how large objects will act, <br /> but things on a small
             scale.
           </p>
+          <Link href="/Shop">
           <button className="mt-8 rounded-md px-6 py-3 bg-[#2DC071] font-semibold text-xl">
             SHOP NOW
           </button>
+          </Link>
         </div>
       </div>
     </div>

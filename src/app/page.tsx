@@ -7,6 +7,7 @@ import Universe from "./components/Universe";
 import FeaturedPosts from "./components/FeaturedPosts";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
        <Carousel />
        <Universe />
        <FeaturedPosts />
+       <Footer/>
     </div>
   );
 }
