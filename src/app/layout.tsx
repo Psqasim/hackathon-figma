@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { CartProvider } from "@/context/CartContext";
 
 
 
@@ -22,9 +23,9 @@ export default function RootLayout({
 
       <body className={inter.className}>
       
-      
+      <CartProvider>
         {children}
-        
+        </CartProvider>
         </body>
     </html>
   );

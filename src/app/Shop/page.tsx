@@ -13,24 +13,35 @@ import brand6 from "/public/brand6.png";
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import ProductColor from "/public/product-colors.png";
-import ShopProduct1 from "/public/ShopProduct1.jpg";
-import ShopProduct2 from "/public/ShopProduct2.jpg";
-import ShopProduct3 from "/public/ShopProduct3.jpg";
-import ShopProduct4 from "/public/ShopProduct4.jpg";
-import ShopProduct5 from "/public/ShopProduct5.jpg";
-import ShopProduct6 from "/public/ShopProduct6.jpg";
-import ShopProduct7 from "/public/ShopProduct7.jpg";
-import ShopProduct8 from "/public/ShopProduct8.jpg";
-import ShopProduct9 from "/public/ShopProduct9.jpg";
-import ShopProduct10 from "/public/ShopProduct10.jpg";
-import ShopProduct11 from "/public/ShopProduct11.jpg";
-import ShopProduct12 from "/public/ShopProduct12.jpg";
+
+
 
 import Link from "next/link";
 import Header from "../components/Header";
+import Products from "../components/post";
+import { client } from "@/sanity/lib/client";
+import { Card } from "@/sanity/lib/interface";
+const getProducts = async () => {
+  const products = await client.fetch(
+    `
+      *[_type=="product"]{
+    _id,
+    title,
+     "image_url": productImage.asset->url ,
+    price,
+    tags,
+    dicountPercentage,
+    description,
+     isNew,
+      dicountPercentage,
+}
+    `
+  );
+  return products;
+};
 
-const Shop = () => {
+const Shop = async() => {
+  const products: Card[] = await getProducts();
   return (
     <>
     <Header />
@@ -121,34 +132,11 @@ const Shop = () => {
           ))}
         </div>
       </div>
-      <Footer />
+      
 
       {/* Product Listings */}
-      <div className="w-full py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-[1124px] mx-auto">
-          {[
-            ShopProduct1, ShopProduct2, ShopProduct3, ShopProduct4,
-            ShopProduct5, ShopProduct6, ShopProduct7, ShopProduct8,
-            ShopProduct9, ShopProduct10, ShopProduct11, ShopProduct12
-          ].map((product, index) => (
-            <div key={index} className="flex flex-col items-center">
-              <div className="w-full max-w-[239px] mb-4">
-                <Image src={product} alt={`Shop Product ${index + 1}`} layout="responsive" />
-              </div>
-              <div className="text-center space-y-2">
-                <p className="font-semibold text-[#252B42]">Graphic Design</p>
-                <p className="text-sm text-[#737373]">English Department</p>
-                <p className="text-[#BDBDBD]">
-                  $16.48{" "}
-                  <span className="text-[#23856D]">$6.48</span>
-                </p>
-                <Image src={ProductColor} alt="Product Colors" className="mx-auto" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
+      <h1 className="text-3xl font-bold text-center my-4">Welcome to Our Store</h1>
+      <Products products={products}/>
       {/* Pagination */}
       <div className="flex justify-center py-4 sm:py-8">
       <div className="flex">
@@ -169,9 +157,10 @@ const Shop = () => {
         </button>
       </div>
     </div>
-
+j
       
     </div>
+    <Footer />
     </>
   );
 };
