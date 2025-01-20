@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { RiArrowDropDownLine } from 'react-icons/ri';
@@ -13,6 +13,9 @@ import Account from '/public/account.png';
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchRef = useRef<HTMLDivElement>(null);
 
   // Categories for the shop
   const categories = [
@@ -21,6 +24,25 @@ const Navbar: React.FC = () => {
     { label: "Kids", href: "/categ/kids" },
     { label: "Accessories", href: "/categ/accessories" },
   ];
+
+  // Close search when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsSearchOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Searching for:', searchQuery);
+    setIsSearchOpen(false);
+    setSearchQuery('');
+  };
 
   return (
     <div className="sticky left-0 right-0 z-50">
@@ -43,7 +65,7 @@ const Navbar: React.FC = () => {
               onMouseLeave={() => setIsShopOpen(false)}
             >
               <div className="py-4 px-2 -mx-2 flex items-center gap-1 cursor-pointer">
-              <Link href='/Shop'>Shop</Link>
+                <Link href='/Shop'>Shop</Link>
                 <RiArrowDropDownLine
                   className={`text-2xl transition-transform duration-300 ${
                     isShopOpen ? 'rotate-180' : ''
@@ -67,7 +89,7 @@ const Navbar: React.FC = () => {
                     <div key={category.label}>
                       <Link
                         href={category.href}
-                        className="font-medium text-gray-800 hover:text-blue-500"
+                        className="block py-2 font-medium text-gray-800 hover:text-blue-500"
                         onClick={() => setIsShopOpen(false)}
                       >
                         {category.label}
@@ -89,26 +111,97 @@ const Navbar: React.FC = () => {
               <Image src={Account} alt="Account logo" className="w-6 h-6" />
               <button>Login / Register</button>
             </div>
-            <div className="flex items-center gap-4 text-2xl text-blue-500">
-              <CiSearch />
+            <div className="flex items-center gap-4 text-xl text-black">
+              {/* Search Icon and Dropdown */}
+              <div className="relative" ref={searchRef}>
+                <button 
+                  onClick={() => setIsSearchOpen(!isSearchOpen)}
+                  className="hover:text-blue-700 transition-colors"
+                >
+                  <CiSearch />
+                </button>
+                
+                {/* Dropdown Search Bar */}
+                {isSearchOpen && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg overflow-hidden">
+                    <form onSubmit={handleSearch} className="p-1">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="Search..."
+                          className="w-full pr-8 border border-gray-300 rounded focus:outline-none focus:border-gray-500"
+                          autoFocus
+                        />
+                        <button
+                          type="submit"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-800 hover:text-gray-500"
+                        >
+                          <CiSearch />
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+              </div>
               <div className="flex items-center gap-1">
                 <MdOutlineShoppingCart />
-                <p className="text-lg">1</p>
               </div>
               <div className="flex items-center gap-1">
                 <CiHeart />
-                <p className="text-lg">1</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Mobile Menu Icon */}
-        <div className="flex md:hidden items-center text-3xl text-gray-700 cursor-pointer">
+        {/* Mobile Menu Icon and Search */}
+        <div className="flex md:hidden items-center gap-4">
+          {/* Mobile Search */}
+          <div className="relative" ref={searchRef}>
+            <button 
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="text-2xl text-blue-500 hover:text-blue-700 transition-colors"
+            >
+              <CiSearch />
+            </button>
+            
+            {/* Mobile Dropdown Search Bar */}
+            {isSearchOpen && (
+              <div className="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg overflow-hidden">
+                <form onSubmit={handleSearch} className="p-2">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search..."
+                      className="w-full p-2 pr-8 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                      autoFocus
+                    />
+                    <button
+                      type="submit"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-500"
+                    >
+                      <CiSearch />
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </div>
+          
+          {/* Mobile Menu Toggle */}
           {isMenuOpen ? (
-            <HiX onClick={() => setIsMenuOpen(false)} />
+            <HiX 
+              onClick={() => setIsMenuOpen(false)} 
+              className="text-3xl text-gray-700 cursor-pointer"
+            />
           ) : (
-            <HiOutlineMenuAlt3 onClick={() => setIsMenuOpen(true)} />
+            <HiOutlineMenuAlt3 
+              onClick={() => setIsMenuOpen(true)} 
+              className="text-3xl text-gray-700 cursor-pointer"
+            />
           )}
         </div>
       </div>
@@ -162,7 +255,6 @@ const Navbar: React.FC = () => {
             <button>Login / Register</button>
           </div>
           <div className="flex items-center gap-4 text-2xl">
-            <CiSearch />
             <div className="flex items-center gap-1">
               <MdOutlineShoppingCart />
               <p className="text-lg">1</p>

@@ -67,8 +67,8 @@ const About = () => {
         {/* Desktop Navigation Links */}
         <div className="hidden md:flex items-center space-x-4 sm:space-x-8">
           <a href="/" className="text-gray-600 text-sm sm:text-base">Home</a>
-          <a href="#" className="text-gray-600 text-sm sm:text-base">Product</a>
-          <a href="#" className="text-gray-600 text-sm sm:text-base">Pricing</a>
+          <a href="/Shop" className="text-gray-600 text-sm sm:text-base">Product</a>
+          <a href="/Pricing" className="text-gray-600 text-sm sm:text-base">Pricing</a>
           <a href="/Contact" className="text-gray-600 text-sm sm:text-base">Contact</a>
         </div>
 
@@ -77,8 +77,8 @@ const About = () => {
           <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg">
             <div className="flex flex-col items-center py-4 space-y-4">
               <a href="/" className="text-gray-600">Home</a>
-              <a href="#" className="text-gray-600">Product</a>
-              <a href="#" className="text-gray-600">Pricing</a>
+              <a href="/Shop" className="text-gray-600">Product</a>
+              <a href="/Pricing" className="text-gray-600">Pricing</a>
               <a href="/Contact" className="text-gray-600">Contact</a>
               <div className="flex flex-col items-center space-y-2">
                 <a href="#" className="text-blue-500">Login</a>

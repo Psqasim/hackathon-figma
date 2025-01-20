@@ -69,15 +69,15 @@ const Products: React.FC<ProductsProps> = ({ products }) => {
               alt={item.name}
               height={200}
               width={300}
-              className="w-full h-56 object-cover"
+              className="w-full h-56 object-contain"
             />
             <div className="p-4">
-              <h2 className="text-lg font-semibold text-gray-900">
-                {item.name}
+              <h2 className="text-[25px] font-bold text-gray-900">
+                {item.title}
               </h2>
-              <p>
+              <p className="mt-4">
                 Tags:{" "}
-                <span className="font-bold text-gray-800">
+                <span className="font-bold  text-gray-800">
                   {Array.isArray(item.tags)
                     ? item.tags.join(", ")
                     : "No tags available"}

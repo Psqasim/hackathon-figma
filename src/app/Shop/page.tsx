@@ -1,3 +1,4 @@
+export const revalidate = 0; // Add this at the top of your [category]/page.tsx file
 import React from "react";
 import Image from "next/image";
 import Arrowicon from "/public/Arrowicon.png";
@@ -10,7 +11,6 @@ import brand3 from "/public/brand3.png";
 import brand4 from "/public/brand4.png";
 import brand5 from "/public/brand5.png";
 import brand6 from "/public/brand6.png";
-
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -157,7 +157,7 @@ const Shop = async() => {
         </button>
       </div>
     </div>
-j
+
       
     </div>
     <Footer />
