@@ -1,24 +1,23 @@
-// components/AddToCart.tsx
-'use client';
-import { useState } from 'react';
-import { useCart } from '@/context/CartContext';
-import { Card } from '@/sanity/lib/interface';
-import CartModal from './CardModel';
+"use client"
 
+import { useState } from "react"
+import type { Card } from "@/sanity/lib/interface"
+import CartModal from "./CardModel"
+import { useCart } from "@/context/CartContext"
 
 interface AddToCartProps {
-  product: Card;
+  product: Card
 }
 
 export default function AddToCart({ product }: AddToCartProps) {
-  const { addToCart } = useCart();
-  const [quantity, setQuantity] = useState(1);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { addToCart } = useCart()
+  const [quantity, setQuantity] = useState(1)
+  const [isCartOpen, setIsCartOpen] = useState(false)
 
   const handleAddToCart = () => {
-    addToCart(product, quantity);
-    setIsCartOpen(true);
-  };
+    addToCart(product, quantity)
+    setIsCartOpen(true)
+  }
 
   return (
     <div className="mt-6 space-y-4">
@@ -52,5 +51,6 @@ export default function AddToCart({ product }: AddToCartProps) {
 
       <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </div>
-  );
+  )
 }
+

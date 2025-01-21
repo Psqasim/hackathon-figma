@@ -12,23 +12,29 @@ import { Card } from "@/sanity/lib/interface";
 import Products from "./components/post";
 // Data fetching function
 const getProducts = async () => {
-  const products = await client.fetch(
-    `
-      *[_type=="product"]{
-        _id,
-        title,
-        "image_url": productImage.asset->url,
-        price,
-        tags,
-        dicountPercentage,
-        description,
-        isNew,
-        dicountPercentage
-      }
-    `
-  );
+  // First get all products ordered by _createdAt
+  const products = await client.fetch(`
+    *[_type=="product"] | order(_createdAt) {
+      _id,
+      title,
+      "image_url": productImage.asset->url,
+      price,
+      tags,
+      dicountPercentage,
+      description,
+      isNew
+    }
+  `);
   
-  return products;
+  // Define the indices you want to show
+  const selectedIndices = [0, 4,5, 7,8, 9, 10,11, 13,16,18,19,];
+  
+  // Filter products to only include those at the specified indices
+  const filteredProducts = selectedIndices
+    .map(index => products[index])
+    .filter(product => product !== undefined);
+  
+  return filteredProducts;
 };
 
 // Page component fetching data directly in the server component

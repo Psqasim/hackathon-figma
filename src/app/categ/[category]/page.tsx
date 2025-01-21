@@ -30,15 +30,15 @@ async function getCategoryProducts(category: string): Promise<CategoryProduct[]>
   
     try {
       // Log the constructed query and parameters
-    //   console.log('Query:', query);
-    //   console.log('Category param:', category);
+      console.log('Query:', query);
+      console.log('Category param:', category);
       
       const products = await client.fetch(query, { category: category.toLowerCase() });
       
-    //   console.log('Raw response:', products);
+      console.log('Raw response:', products);
       return products;
     } catch (error) {
-    //   console.error('Error details:', error);
+      console.error('Error details:', error);
       throw error;
     }
   }
