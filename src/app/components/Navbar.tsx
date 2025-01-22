@@ -100,7 +100,7 @@ const Navbar: React.FC = () => {
             <Link href="/About">About</Link>
             <Link href="/Pricing">Pricing</Link>
             <Link href="/Contact">Contact</Link>
-            <Link href="#">Pages</Link>
+            
           </ul>
 
           {/* Login and Icons */}
@@ -241,7 +241,7 @@ const Navbar: React.FC = () => {
           <Link href="/About">About</Link>
           <Link href="/Pricing">Pricing</Link>
           <Link href="/Contact">Contact</Link>
-          <Link href="#">Pages</Link>
+         
         </ul>
         <div className="mt-4 flex flex-col gap-4 text-blue-500">
           <div className="flex items-center gap-2">
