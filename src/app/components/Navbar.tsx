@@ -11,6 +11,7 @@ import { HiOutlineMenuAlt3, HiX } from "react-icons/hi"
 import Logo from "/public/navbar-brand.png"
 import Account from "/public/account.png"
 import { useCart } from "@/context/CartContext"
+import { useUser, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs"
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -19,6 +20,7 @@ const Navbar: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const searchRef = useRef<HTMLDivElement>(null)
   const { totalItems } = useCart()
+  const { isSignedIn, user } = useUser()
 
   // Categories for the shop
   const categories = [
@@ -106,8 +108,18 @@ const Navbar: React.FC = () => {
           {/* Login and Icons */}
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2 text-blue-500">
-              <Image src={Account || "/placeholder.svg"} alt="Account logo" className="w-6 h-6" />
-              <button>Login / Register</button>
+              {isSignedIn ? (
+                <UserButton afterSignOutUrl="/" />
+              ) : (
+                <>
+                  <SignInButton mode="modal">
+                    <button className="text-blue-500 hover:text-blue-700">Sign in</button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <button className="text-blue-500 hover:text-blue-700">Sign up</button>
+                  </SignUpButton>
+                </>
+              )}
             </div>
             <div className="flex items-center gap-4 text-xl text-black">
               {/* Search Icon and Dropdown */}
@@ -239,8 +251,18 @@ const Navbar: React.FC = () => {
         </ul>
         <div className="mt-4 flex flex-col gap-4 text-blue-500">
           <div className="flex items-center gap-2">
-            <Image src={Account || "/placeholder.svg"} alt="Account logo" className="w-6 h-6" />
-            <button>Login / Register</button>
+            {isSignedIn ? (
+              <UserButton afterSignOutUrl="/" />
+            ) : (
+              <>
+                <SignInButton mode="modal">
+                  <button className="text-blue-500 hover:text-blue-700">Sign in</button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <button className="text-blue-500 hover:text-blue-700">Sign up</button>
+                </SignUpButton>
+              </>
+            )}
           </div>
           <div className="flex items-center gap-4 text-2xl">
             <Link href="/cart" className="flex items-center gap-1">
