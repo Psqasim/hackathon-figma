@@ -1,31 +1,30 @@
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
-import { CartProvider } from "@/context/CartContext"
-import { ClerkProvider } from "@clerk/nextjs"
-import { SanityLive } from "@/sanity/lib/live"
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] })
+import { SanityLive } from "@/sanity/lib/live";
+import { Providers } from "./components/Providers";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Ecommerce Website 2025",
   description: "PS QASIM",
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          <CartProvider>{children}</CartProvider>
-          <SanityLive/>
-        </body>
-      </html>
-    </ClerkProvider>
-  )
+    <html lang="en">
+      <body className={inter.className}>
+        <Providers>
+          {children}
+        </Providers>
+        <SanityLive />
+      </body>
+    </html>
+  );
 }
-
