@@ -1,17 +1,32 @@
-import { authMiddleware } from "@clerk/nextjs"
+import { getAuth } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export default authMiddleware({
-  // Routes that can be accessed while signed out
-  publicRoutes: ["/", "/shop", "/product/(.*)", "/sign-in", "/sign-up"],
-  // Routes that can always be accessed, and have
-  // no authentication information
-  ignoredRoutes: ["/api/webhook/clerk"],
-})
+export default async function middleware(request: NextRequest) {
+  // Create auth object
+  const { userId } = await getAuth(request);
 
-export const config = {
-  // Protects all routes, including api/trpc.
-  // See https://clerk.com/docs/references/nextjs/auth-middleware
-  // for more information about configuring your Middleware
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  // Define your public routes
+  const publicRoutes = ["/", "/shop", "/product/(.*)", "/sign-in", "/sign-up"];
+  const isPublicRoute = publicRoutes.some(route => 
+    new RegExp(`^${route}$`).test(request.nextUrl.pathname)
+  );
+
+  // Allow access to public routes
+  if (isPublicRoute) {
+    return NextResponse.next();
+  }
+
+  // Redirect to sign-in if no user and trying to access protected route
+  if (!userId) {
+    const signInUrl = new URL('/sign-in', request.url);
+    signInUrl.searchParams.set('redirect_url', request.url);
+    return NextResponse.redirect(signInUrl);
+  }
+
+  return NextResponse.next();
 }
 
+export const config = {
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+};
