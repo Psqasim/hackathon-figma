@@ -190,6 +190,12 @@ const Navbar: React.FC = () => {
             )}
           </div>
 
+          {/* Mobile Cart Icon */}
+          <Link href="/cart" className="flex items-center gap-1 text-2xl text-blue-500">
+            <MdOutlineShoppingCart />
+            {totalItems > 0 && <span className="text-sm">{totalItems}</span>}
+          </Link>
+
           {/* Mobile Menu Toggle */}
           {isMenuOpen ? (
             <HiX onClick={() => setIsMenuOpen(false)} className="text-3xl text-gray-700 cursor-pointer" />
@@ -212,7 +218,7 @@ const Navbar: React.FC = () => {
           {/* Mobile Shop Categories */}
           <div className="flex flex-col gap-2">
             <div className="flex items-center cursor-pointer" onClick={() => setIsShopOpen(!isShopOpen)}>
-              Shop
+              <Link href="/Shop">Shop</Link>
               <RiArrowDropDownLine
                 className={`text-2xl transition-transform duration-300 ${isShopOpen ? "rotate-180" : ""}`}
               />
@@ -243,10 +249,6 @@ const Navbar: React.FC = () => {
             <button>Login / Register</button>
           </div>
           <div className="flex items-center gap-4 text-2xl">
-            <Link href="/cart" className="flex items-center gap-1">
-              <MdOutlineShoppingCart />
-              <span className="text-lg">{totalItems || 0}</span>
-            </Link>
             <div className="flex items-center gap-1">
               <CiHeart />
               <p className="text-lg">0</p>
@@ -261,5 +263,4 @@ const Navbar: React.FC = () => {
   )
 }
 
-export default Navbar
-
+export default Navbar;
