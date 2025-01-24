@@ -1,6 +1,6 @@
 'use client'
 // pages/shop/index.tsx
-import { useRouter } from 'next/router';
+export const revalidate = 0; 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 

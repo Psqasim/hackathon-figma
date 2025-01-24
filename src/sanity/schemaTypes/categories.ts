@@ -28,6 +28,16 @@ export default {
         type: 'number',
       },
       {
+        name:"dicountPercentage",
+        type:"number",
+        title:"Discount Percentage",
+    },
+    {
+        name:"isNew",
+        type:"boolean",
+        title:"New Badge",
+    },
+      {
         name: 'description',
         title: 'Description',
         type: 'text',

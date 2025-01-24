@@ -15,7 +15,7 @@ const Page = () => {
   return (
     <div className="w-full">
       <Navbar2 />
-      
+
       {/* Hero Section */}
       <div className="w-full flex flex-col-reverse md:flex-row px-4 md:px-0">
         {/* Left Section */}
@@ -45,9 +45,9 @@ const Page = () => {
 
         {/* Right Section */}
         <div className="w-full md:w-1/2 flex justify-center items-center mb-8 md:mb-0">
-          <Image 
-            src={Bg} 
-            alt="image here" 
+          <Image
+            src={Bg}
+            alt="image here"
             className="w-full max-w-[550px] object-contain"
           />
         </div>
@@ -57,9 +57,12 @@ const Page = () => {
       <div className="w-full flex justify-center px-4">
         <div className="w-full max-w-[1050px] py-12 md:py-[112px] bg-white flex justify-center items-center">
           <div className="w-full max-w-[633px] flex flex-col items-center">
-            <p className="font-semibold leading-6 text-center">VISIT OUR OFFICE</p>
+            <p className="font-semibold leading-6 text-center">
+              VISIT OUR OFFICE
+            </p>
             <p className="text-2xl md:text-[40px] font-semibold text-center text-[#252B42] mt-4">
-              We help small businesses <br className="md:hidden" /> with big ideas
+              We help small businesses <br className="md:hidden" /> with big
+              ideas
             </p>
 
             {/* Contact Info */}
@@ -119,7 +122,8 @@ const Page = () => {
           src={BlueArrow}
           alt="downarrow"
           className="md:w-auto absolute top-0 left-1/2 transform -translate-x-1/2 object-contain
-          " />
+          "
+        />
         <div className="w-full max-w-[1050px] flex justify-center items-center">
           <div className="w-full max-w-[607px] flex justify-center items-center">
             <div className="w-full max-w-[272px] text-center">

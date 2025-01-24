@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import { CiAlarmOn } from "react-icons/ci";
 import { FaChartArea } from "react-icons/fa";
@@ -74,7 +74,6 @@ const FeaturedPosts = () => {
                 alt={post.title}
                 className=" object-cover"
                 layout="fill"
-                
               />
               <div className="mt-8 flex flex-wrap gap-4 sm:gap-10 ml-3 font-normal leading-4">
                 <p className="text-[#8EC2F2]">{post.link}</p>

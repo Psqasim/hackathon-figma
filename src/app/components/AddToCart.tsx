@@ -1,27 +1,47 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import type { Card } from "@/sanity/lib/interface"
-import CartModal from "./CardModel"
-import { useCart } from "@/context/CartContext"
+import { useState } from "react";
+import Image from "next/image";
+import type { Card } from "@/sanity/lib/interface";
+import CartModal from "./CardModel";
+import { useCart } from "@/context/CartContext";
 
 interface AddToCartProps {
-  product: Card
+  product: Card & {
+    imageUrl?: string;
+  };
 }
 
 export default function AddToCart({ product }: AddToCartProps) {
-  const { addToCart } = useCart()
-  const [quantity, setQuantity] = useState(1)
-  const [isCartOpen, setIsCartOpen] = useState(false)
+  const { addToCart } = useCart();
+  const [quantity, setQuantity] = useState(1);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const handleAddToCart = () => {
-    addToCart(product, quantity)
-    setIsCartOpen(true)
-  }
+    // Transform CategoryProduct to Card
+    const cartProduct: Card = {
+      ...product,
+      title: product.name || product.title,
+      image_url: product.imageUrl || "/placeholder.png",
+      images: product.imageUrl ? [{ url: product.imageUrl }] : [],
+      quantity: 1,
+      name: product.name,
+      description: product.description,
+      tags: product.tags || [],
+      rating: 0, // Default value if not available
+      isNew: product.isNew || false,
+      dicountPercentage: product.dicountPercentage || 0,
+      category: "", // You might need to add this
+    };
+
+    addToCart(cartProduct);
+    setIsCartOpen(true);
+  };
 
   return (
     <div className="mt-6 space-y-4">
       <div className="flex items-center gap-4">
+        <label className="text-sm text-gray-600">Quantity:</label>
         <div className="flex items-center border rounded-md">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -37,9 +57,7 @@ export default function AddToCart({ product }: AddToCartProps) {
             +
           </button>
         </div>
-        <p className="text-gray-600">
-          Total: <span className="font-bold text-green-600">${(product.price * quantity).toFixed(2)}</span>
-        </p>
+        {/*  */}
       </div>
 
       <button
@@ -51,6 +69,5 @@ export default function AddToCart({ product }: AddToCartProps) {
 
       <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </div>
-  )
+  );
 }
-

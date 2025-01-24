@@ -1,43 +1,44 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import type { Card } from "@/sanity/lib/interface"
-import { useCart } from "@/context/CartContext"
+import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import type { Card } from "@/sanity/lib/interface";
+import { useCart } from "@/context/CartContext";
 
 interface ProductsProps {
-  products: Card[]
+  products: Card[];
 }
 
 const Products: React.FC<ProductsProps> = ({ products }) => {
-  const router = useRouter()
-  const { addToCart } = useCart()
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({})
+  const router = useRouter();
+  const { addToCart } = useCart();
+  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
 
   const seeMore = (productId: string) => {
-    router.push(`/product/${productId}`)
-  }
+    router.push(`/product/${productId}`);
+  };
 
   const handleQuantityChange = (productId: string, value: number) => {
     setQuantities((prev) => ({
       ...prev,
       [productId]: Math.max(1, value),
-    }))
-  }
+    }));
+  };
 
   const handleAddToCart = (item: Card) => {
-    const quantity = quantities[item._id] || 1
-    addToCart(item, quantity)
+    const quantity = quantities[item._id] || 1;
+    addToCart(item, quantity);
     alert(`${item.title} has been added to the cart.`);
-    setQuantities((prev) => ({ ...prev, [item._id]: 1 }))
-  }
+    setQuantities((prev) => ({ ...prev, [item._id]: 1 }));
+  };
 
-  // Rest of the component remains the same
   return (
     <>
       <div className="w-full max-w-[607px] mx-auto mb-8 text-center">
-        <p className="text-base md:text-lg leading-5 text-[#737373] animate-fade-in">Featured Products</p>
+        <p className="text-base md:text-lg leading-5 text-[#737373] animate-fade-in">
+          Featured Products
+        </p>
         <h1 className="font-semibold text-xl md:text-2xl leading-8 text-[#252B42] mb-2 animate-fade-in">
           BESTSELLER PRODUCTS
         </h1>
@@ -50,8 +51,15 @@ const Products: React.FC<ProductsProps> = ({ products }) => {
         {products.map((item: Card) => (
           <div
             key={item._id}
-            className="bg-white border border-gray-200 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 overflow-hidden flex flex-col"
+            className="bg-white border border-gray-200 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 overflow-hidden flex flex-col relative"
           >
+            {item.isNew && (
+              <div className="absolute top-3 left-3 z-10">
+                <span className="text-xs uppercase tracking-wider font-bold bg-yellow-500 text-white px-3 py-1 rounded-full shadow-md animate-pulse">
+                  New Arrival
+                </span>
+              </div>
+            )}
             <div className="relative overflow-hidden group">
               <Image
                 src={item.image_url || "/placeholder.svg"}
@@ -62,10 +70,16 @@ const Products: React.FC<ProductsProps> = ({ products }) => {
               />
             </div>
             <div className="p-4 flex flex-col flex-grow">
-              <h2 className="text-[23px] font-bold text-gray-900 mb-2">{item.title}</h2>
-
+              <h2 className="text-[23px] font-bold text-gray-900 mb-2">
+                {item.title}
+              </h2>
+              <p className="text-gray-600 mb-2 text-sm line-clamp-2">
+                {item.description}
+              </p>
               <div className="items-center mt-2">
-                <p className="text-lg font-bold text-green-600">${item.price}</p>
+                <p className="text-lg font-bold text-green-600">
+                  ${item.price}
+                </p>
 
                 <span className="text-sm font-medium bg-green-100 text-green-700 rounded-full px-3 py-1 w-fit">
                   Discount {item.dicountPercentage}%
@@ -76,14 +90,24 @@ const Products: React.FC<ProductsProps> = ({ products }) => {
                 <label className="text-sm text-gray-600">Quantity:</label>
                 <div className="flex items-center border rounded">
                   <button
-                    onClick={() => handleQuantityChange(item._id, (quantities[item._id] || 1) - 1)}
+                    onClick={() =>
+                      handleQuantityChange(
+                        item._id,
+                        (quantities[item._id] || 1) - 1
+                      )
+                    }
                     className="px-2 py-1 border-r hover:bg-gray-100 transition-colors duration-200"
                   >
                     -
                   </button>
                   <span className="px-4">{quantities[item._id] || 1}</span>
                   <button
-                    onClick={() => handleQuantityChange(item._id, (quantities[item._id] || 1) + 1)}
+                    onClick={() =>
+                      handleQuantityChange(
+                        item._id,
+                        (quantities[item._id] || 1) + 1
+                      )
+                    }
                     className="px-2 py-1 border-l hover:bg-gray-100 transition-colors duration-200"
                   >
                     +
@@ -121,14 +145,13 @@ const Products: React.FC<ProductsProps> = ({ products }) => {
             transform: translateY(0);
           }
         }
-        
+
         .animate-fade-in {
           animation: fadeIn 0.6s ease-out forwards;
         }
       `}</style>
     </>
-  )
-}
+  );
+};
 
-export default Products
-
+export default Products;

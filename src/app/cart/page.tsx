@@ -1,12 +1,23 @@
-"use client"
+"use client";
 
-import { useCart } from "@/context/CartContext"
-import Navbar from "@/app/components/Navbar"
-import Footer from "@/app/components/Footer"
-import Image from "next/image"
+import { useCart } from "@/context/CartContext";
+import Navbar from "@/app/components/Navbar";
+import Footer from "@/app/components/Footer";
+import Image from "next/image";
 
 export default function CartPage() {
-  const { cartItems, removeFromCart, updateQuantity, totalItems, totalPrice } = useCart()
+  const { cartItems, removeFromCart, updateQuantity, totalItems } = useCart();
+
+  // Calculate total price with discounts applied
+  const calculateTotalPrice = () => {
+    return cartItems.reduce((acc, item) => {
+      const discount = (item.price * (item.dicountPercentage || 0)) / 100; // Calculate discount
+      const discountedPrice = item.price - discount; // Apply discount to price
+      return acc + discountedPrice * item.quantity; // Add to total
+    }, 0);
+  };
+
+  const totalPrice = calculateTotalPrice(); // Dynamic total price calculation
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -18,77 +29,108 @@ export default function CartPage() {
 
         {cartItems.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-lg sm:text-xl text-gray-600">Your cart is empty</p>
+            <p className="text-lg sm:text-xl text-gray-600">
+              Your cart is empty
+            </p>
           </div>
         ) : (
           <div className="grid md:grid-cols-3 gap-4 sm:gap-8">
             {/* Cart Items Section */}
             <div className="md:col-span-2 space-y-3 sm:space-y-4">
-              {cartItems.map((item) => (
-                <div 
-                  key={item._id} 
-                  className="flex flex-col sm:flex-row gap-3 sm:gap-4 bg-white p-3 sm:p-4 rounded-lg shadow"
-                >
-                  {/* Product Image */}
-                  <div className="relative w-full sm:w-24 h-48 sm:h-24">
-                    <Image
-                      src={item.image_url || "/placeholder.svg"}
-                      alt={item.title || ""}
-                      fill
-                      className="object-cover rounded"
-                    />
-                  </div>
+              {cartItems.map((item) => {
+                const discount =
+                  (item.price * (item.dicountPercentage || 0)) / 100; // Calculate discount
+                const discountedPrice = item.price - discount;
 
-                  {/* Product Details */}
-                  <div className="flex-grow space-y-2">
-                    <div className="flex justify-between items-start">
-                      <h3 className="font-semibold text-lg">{item.title}</h3>
-                      <p className="font-bold sm:hidden">
-                        ${(item.price * item.quantity).toFixed(2)}
-                      </p>
+                return (
+                  <div
+                    key={item._id}
+                    className="flex flex-col sm:flex-row gap-3 sm:gap-4 bg-white p-3 sm:p-4 rounded-lg shadow"
+                  >
+                    {/* Product Image */}
+                    <div className="relative w-full sm:w-24 h-48 sm:h-24">
+                      <Image
+                        src={item.image_url || "/placeholder.svg"}
+                        alt={item.title || ""}
+                        fill
+                        className="object-cover rounded"
+                      />
                     </div>
-                    <p className="text-green-600 font-bold">${item.price}</p>
-                    
-                    {/* Quantity Controls and Remove Button */}
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mt-2">
-                      <div className="flex items-center border rounded max-w-[120px]">
+
+                    {/* Product Details */}
+                    <div className="flex-grow space-y-2">
+                      <div className="flex justify-between items-start">
+                        <h3 className="font-semibold text-lg">{item.title}</h3>
+                        <p className="font-bold sm:hidden">
+                          ${(discountedPrice * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
+                      <p className="font-bold text-gray-800">
+                        Price: ${item.price.toFixed(2)}
+                      </p>
+
+                      {/* Conditional Discount Display */}
+                      {item.dicountPercentage > 0 && (
+                        <>
+                          <p className="text-red-500 text-sm">
+                            Discount: {item.dicountPercentage}%
+                          </p>
+                          <p className="text-blue-600 font-semibold">
+                            After Discount: ${discountedPrice.toFixed(2)}
+                          </p>
+                        </>
+                      )}
+
+                      {/* Quantity Controls and Remove Button */}
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mt-2">
+                        <div className="flex items-center border rounded max-w-[120px]">
+                          <button
+                            onClick={() =>
+                              updateQuantity(
+                                item._id,
+                                Math.max(1, item.quantity - 1)
+                              )
+                            }
+                            className="px-3 py-1 border-r hover:bg-gray-100"
+                          >
+                            -
+                          </button>
+                          <span className="px-4 py-1">{item.quantity}</span>
+                          <button
+                            onClick={() =>
+                              updateQuantity(item._id, item.quantity + 1)
+                            }
+                            className="px-3 py-1 border-l hover:bg-gray-100"
+                          >
+                            +
+                          </button>
+                        </div>
                         <button
-                          onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}
-                          className="px-3 py-1 border-r hover:bg-gray-100"
+                          onClick={() => removeFromCart(item._id)}
+                          className="text-red-500 hover:text-red-700 text-sm"
                         >
-                          -
-                        </button>
-                        <span className="px-4 py-1">{item.quantity}</span>
-                        <button
-                          onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                          className="px-3 py-1 border-l hover:bg-gray-100"
-                        >
-                          +
+                          Remove
                         </button>
                       </div>
-                      <button 
-                        onClick={() => removeFromCart(item._id)} 
-                        className="text-red-500 hover:text-red-700 text-sm"
-                      >
-                        Remove
-                      </button>
+                    </div>
+
+                    {/* Price - Hidden on Mobile */}
+                    <div className="hidden sm:block text-right">
+                      <p className="font-bold">
+                        ${(discountedPrice * item.quantity).toFixed(2)}
+                      </p>
                     </div>
                   </div>
-
-                  {/* Price - Hidden on Mobile */}
-                  <div className="hidden sm:block text-right">
-                    <p className="font-bold">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Order Summary Section */}
             <div className="md:col-span-1">
               <div className="bg-white p-4 sm:p-6 rounded-lg shadow sticky top-4">
-                <h2 className="text-lg sm:text-xl font-bold mb-4">Order Summary</h2>
+                <h2 className="text-lg sm:text-xl font-bold mb-4">
+                  Order Summary
+                </h2>
                 <div className="space-y-3 mb-4">
                   <div className="flex justify-between text-sm sm:text-base">
                     <span>Subtotal</span>
@@ -115,5 +157,5 @@ export default function CartPage() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }
