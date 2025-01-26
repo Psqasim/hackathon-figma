@@ -10,11 +10,7 @@ interface CartModalProps {
   isFullPage?: boolean;
 }
 
-export default function CartModal({
-  isOpen,
-  onClose,
-  isFullPage = false,
-}: CartModalProps) {
+export default function CartModal({ isOpen, onClose, isFullPage = false }: CartModalProps) {
   const { cartItems, removeFromCart, updateQuantity, totalItems } = useCart();
   const router = useRouter();
 
@@ -66,12 +62,14 @@ export default function CartModal({
             <>
               <div className="space-y-4 max-h-[50vh] overflow-y-auto">
                 {cartItems.map((item) => {
-                  const discount =
-                    (item.price * (item.dicountPercentage || 0)) / 100;
+                  const discount = (item.price * (item.dicountPercentage || 0)) / 100;
                   const discountedPrice = item.price - discount;
 
                   return (
-                    <div key={item._id} className="flex gap-4 border-b pb-4">
+                    <div
+                      key={item._id}
+                      className="flex gap-4 border-b pb-4"
+                    >
                       <div className="relative w-20 h-20">
                         <Image
                           src={item.image_url || "/placeholder.svg"}
@@ -82,8 +80,7 @@ export default function CartModal({
                       </div>
                       <div className="flex-grow">
                         <h3 className="font-semibold">{item.title}</h3>
-                        {item.dicountPercentage &&
-                        item.dicountPercentage > 0 ? (
+                        {item.dicountPercentage && item.dicountPercentage > 0 ? (
                           <>
                             <p className="text-gray-500 line-through">
                               ${item.price.toFixed(2)}

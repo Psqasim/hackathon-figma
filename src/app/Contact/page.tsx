@@ -7,15 +7,14 @@ import { FaTwitter } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import Footer from "../components/Footer";
 import BlueArrow from "/public/blueArrow.png";
-
 import { FiPhone } from "react-icons/fi";
 import { IoIosMail } from "react-icons/io";
 
 const Page = () => {
   return (
-    <div className="w-full">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <Navbar2 />
-
+      
       {/* Hero Section */}
       <div className="w-full flex flex-col-reverse md:flex-row px-4 md:px-0">
         {/* Left Section */}
@@ -45,9 +44,9 @@ const Page = () => {
 
         {/* Right Section */}
         <div className="w-full md:w-1/2 flex justify-center items-center mb-8 md:mb-0">
-          <Image
-            src={Bg}
-            alt="image here"
+          <Image 
+            src={Bg} 
+            alt="image here" 
             className="w-full max-w-[550px] object-contain"
           />
         </div>
@@ -57,12 +56,9 @@ const Page = () => {
       <div className="w-full flex justify-center px-4">
         <div className="w-full max-w-[1050px] py-12 md:py-[112px] bg-white flex justify-center items-center">
           <div className="w-full max-w-[633px] flex flex-col items-center">
-            <p className="font-semibold leading-6 text-center">
-              VISIT OUR OFFICE
-            </p>
+            <p className="font-semibold leading-6 text-center">VISIT OUR OFFICE</p>
             <p className="text-2xl md:text-[40px] font-semibold text-center text-[#252B42] mt-4">
-              We help small businesses <br className="md:hidden" /> with big
-              ideas
+              We help small businesses <br className="md:hidden" /> with big ideas
             </p>
 
             {/* Contact Info */}
@@ -122,16 +118,15 @@ const Page = () => {
           src={BlueArrow}
           alt="downarrow"
           className="md:w-auto absolute top-0 left-1/2 transform -translate-x-1/2 object-contain
-          "
-        />
+          " />
         <div className="w-full max-w-[1050px] flex justify-center items-center">
           <div className="w-full max-w-[607px] flex justify-center items-center">
             <div className="w-full max-w-[272px] text-center">
               <h5 className="text-[#252B42] font-bold text-base">
-                WE Can't WAIT TO MEET YOU
+                WE Can&apos;t WAIT TO MEET YOU
               </h5>
               <h1 className="font-bold text-4xl md:text-[58px] leading-tight text-[#252B42] mt-4">
-                Let's Talk
+                Let&apos;s Talk
               </h1>
               <button className="w-full max-w-[186px] h-[52px] bg-[#23A6F0] rounded-md text-white flex justify-center items-center mx-auto mt-6">
                 Try it free now

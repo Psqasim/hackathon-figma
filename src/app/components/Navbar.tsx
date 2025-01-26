@@ -1,82 +1,82 @@
 "use client"
-
-import { useState, useRef, useEffect, useMemo } from "react"
+import type React from "react"
+import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { signOut, useSession } from "next-auth/react"
 import { CiSearch } from "react-icons/ci"
 import { MdOutlineShoppingCart, MdErrorOutline } from "react-icons/md"
 import { CiHeart } from "react-icons/ci"
 import { HiOutlineMenuAlt3, HiX } from "react-icons/hi"
 import { RiArrowDropDownLine } from "react-icons/ri"
-import { FaUserCircle } from "react-icons/fa"
 import Logo from "/public/navbar-brand.png"
 import Account from "/public/account.png"
 import { useCart } from "@/context/CartContext"
 
-const Navbar = () => {
-  const { data: session, status } = useSession()
+const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchSuggestions, setSearchSuggestions] = useState<string[]>([])
   const [searchNotification, setSearchNotification] = useState<string | null>(null)
-  const [isSigningOut, setIsSigningOut] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
   const shopRef = useRef<HTMLDivElement>(null)
-  const profileRef = useRef<HTMLDivElement>(null)
   const navbarRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const { totalItems } = useCart()
 
-  // Add effect to handle session changes
-  useEffect(() => {
-    if (status === "authenticated") {
-      router.refresh()
-    }
-  }, [status, router])
-
-  const categories = useMemo(
-    () => [
-      {
-        label: "Men",
-        href: "/categ/men",
-        keywords: ["men", "male", "gentleman", "mens", "man"],
-      },
-      {
-        label: "Women",
-        href: "/categ/women",
-        keywords: ["women", "female", "ladies", "womens", "lady", "girl", "girls", "woman"],
-      },
-      {
-        label: "Kids",
-        href: "/categ/kids",
-        keywords: ["children", "kids", "kid", "child", "youth"],
-      },
-      {
-        label: "Accessories",
-        href: "/categ/accessories",
-        keywords: ["accessories", "add-ons", "extras", "add ons"],
-      },
-    ],
-    [],
-  )
+  const categories = [
+    {
+      label: "Men",
+      href: "/categ/men",
+      keywords: ["men", "male", "gentleman", "mens", "man"],
+    },
+    {
+      label: "Women",
+      href: "/categ/women",
+      keywords: ["women", "female", "ladies", "womens", "lady" , "girl" , "girls" , "woman"],
+    },
+    {
+      label: "Kids",
+      href: "/categ/kids",
+      keywords: ["children", "kids", "kid", "child", "youth"],
+    },
+    {
+      label: "Accessories",
+      href: "/categ/accessories",
+      keywords: ["accessories", "add-ons", "extras", "add ons"],
+    },
+  ]
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setIsSearchOpen(false)
       }
-      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-        setIsProfileDropdownOpen(false)
-      }
     }
 
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
+
+  // useEffect(() => {
+  //   let lastScrollY = window.scrollY
+
+  //   const handleScroll = () => {
+  //     const currentScrollY = window.scrollY
+
+  //     if (currentScrollY > lastScrollY) {
+  //       setIsMenuOpen(false)
+  //       setIsSearchOpen(false)
+  //       //setIsShopOpen(false)
+  //     }
+
+  //     lastScrollY = currentScrollY
+  //   }
+
+  //   window.addEventListener("scroll", handleScroll, { passive: true })
+  //   return () => window.removeEventListener("scroll", handleScroll)
+  // }, [])
 
   useEffect(() => {
     if (searchNotification) {
@@ -95,7 +95,7 @@ const Navbar = () => {
       )
       .map((cat) => cat.label)
     setSearchSuggestions(suggestions)
-  }, [searchQuery, categories])
+  }, [searchQuery])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -121,39 +121,6 @@ const Navbar = () => {
   const toggleMobileMenu = () => {
     setIsMenuOpen((prev) => !prev)
     setIsSearchOpen(false)
-  }
-
-  const toggleProfileDropdown = () => {
-    setIsProfileDropdownOpen((prev) => !prev)
-  }
-
-  const handleSignOut = async () => {
-    if (isSigningOut) return
-
-    try {
-      setIsSigningOut(true)
-      const result = await signOut({ redirect: false })
-
-      setIsProfileDropdownOpen(false)
-
-      if (result?.url) {
-        router.push(result.url)
-      } else {
-        router.push("/")
-      }
-    } catch (error) {
-      console.error("Sign out error:", error)
-      setSearchNotification("Failed to sign out. Please try again.")
-    } finally {
-      setIsSigningOut(false)
-    }
-  }
-
-  const getDisplayName = () => {
-    if (status === "authenticated" && session?.user?.name) {
-      return session.user.name
-    }
-    return "Account"
   }
 
   return (
@@ -208,56 +175,9 @@ const Navbar = () => {
             {/* Desktop Right Side Icons */}
             <div className="flex items-center gap-6">
               {/* Account */}
-              <div className="relative" ref={profileRef}>
-                <button
-                  onClick={toggleProfileDropdown}
-                  className="flex items-center gap-2 text-blue-500 hover:text-blue-600"
-                >
-                  <Image src={Account || "/placeholder.svg"} alt="Account" width={24} height={24} className="w-6 h-6" />
-                  <span>{getDisplayName()}</span>
-                  <RiArrowDropDownLine className="text-2xl" />
-                </button>
-                {isProfileDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg p-2">
-                    {status === "authenticated" && session?.user ? (
-                      <>
-                        <div className="px-4 py-2 text-sm text-gray-700">Signed in as {session.user.email}</div>
-                        <hr className="my-1" />
-                        <Link
-                          href="/profile"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
-                          onClick={() => setIsProfileDropdownOpen(false)}
-                        >
-                          Profile
-                        </Link>
-                        <button
-                          onClick={handleSignOut}
-                          disabled={isSigningOut}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg disabled:opacity-50"
-                        >
-                          {isSigningOut ? "Signing out..." : "Sign Out"}
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <Link
-                          href="/signin"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
-                          onClick={() => setIsProfileDropdownOpen(false)}
-                        >
-                          Sign In
-                        </Link>
-                        <Link
-                          href="/signup"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
-                          onClick={() => setIsProfileDropdownOpen(false)}
-                        >
-                          Sign Up
-                        </Link>
-                      </>
-                    )}
-                  </div>
-                )}
+              <div className="flex items-center gap-2 text-blue-500">
+                <Image src={Account || "/placeholder.svg"} alt="Account" width={24} height={24} className="w-6 h-6" />
+                <button>Login</button>
               </div>
 
               {/* Desktop Icons */}
@@ -330,19 +250,6 @@ const Navbar = () => {
               <CiSearch />
             </button>
 
-            {/* Mobile Account */}
-            <div className="relative">
-              {status === "authenticated" ? (
-                <Link href="/profile" className="text-2xl text-blue-500">
-                  <FaUserCircle />
-                </Link>
-              ) : (
-                <Link href="/signin" className="text-2xl text-blue-500">
-                  <FaUserCircle />
-                </Link>
-              )}
-            </div>
-
             {/* Mobile Cart */}
             <Link href="/cart" className="relative text-2xl text-blue-500">
               <MdOutlineShoppingCart />
@@ -394,19 +301,22 @@ const Navbar = () => {
                   ))}
                 </ul>
               )}
-            </form>
+            </form>{" "}
           </div>
         )}
 
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
-          <div className="md:hidden fixed top-16 left-0 right-0 bg-white z-50 overflow-y-auto">
+          <div className="md:hidden fixed top-16 left-0 right-0  bg-white z-50 overflow-y-auto">
             <div className="p-4 space-y-4">
               <Link href="/" className="block py-2 border-b" onClick={() => setIsMenuOpen(false)}>
                 Home
               </Link>
               <div>
-                <button className="flex items-center justify-between w-full py-2 border-b">
+                <button
+                  className="flex items-center justify-between w-full py-2 border-b"
+                  //onClick={() => setIsShopOpen(!isShopOpen)}
+                >
                   <Link href="/Shop">Shop</Link>
                 </button>
               </div>
@@ -422,35 +332,10 @@ const Navbar = () => {
 
               {/* Mobile Account & Wishlist */}
               <div className="space-y-4 pt-4">
-                {status === "authenticated" && session?.user ? (
-                  <>
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src={Account || "/placeholder.svg"}
-                        alt="Account"
-                        width={24}
-                        height={24}
-                        className="w-6 h-6"
-                      />
-                      <span>{session.user.name}</span>
-                    </div>
-                    <Link href="/profile" className="block py-2 hover:bg-gray-100" onClick={() => setIsMenuOpen(false)}>
-                      Profile
-                    </Link>
-                    <button onClick={handleSignOut} className="block w-full text-left py-2 px-4 hover:bg-gray-100">
-                      Sign Out
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/signin" className="block py-2 hover:bg-gray-100" onClick={() => setIsMenuOpen(false)}>
-                      Sign In
-                    </Link>
-                    <Link href="/signup" className="block py-2 hover:bg-gray-100" onClick={() => setIsMenuOpen(false)}>
-                      Sign Up
-                    </Link>
-                  </>
-                )}
+                <div className="flex items-center gap-2">
+                  <Image src={Account || "/placeholder.svg"} alt="Account" width={24} height={24} className="w-6 h-6" />
+                  <button>Login / Register</button>
+                </div>
                 <Link href="/wishlist" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                   <CiHeart />
                   <span>Wishlist</span>

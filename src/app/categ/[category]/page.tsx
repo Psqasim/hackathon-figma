@@ -112,14 +112,14 @@ export default async function CategoryPage({
                     {product.name}
                   </h2>
                   <p className="text-gray-600 mb-2 text-sm line-clamp-2">
-                    {product.description}
-                  </p>
+    {product.description}
+  </p>
 
                   <div className="flex flex-wrap gap-4 items-center">
                     <p className="text-3xl font-bold text-green-700">
                       ${product.price}
                     </p>
-
+                    
                     {product.dicountPercentage && (
                       <p className="text-sm font-medium bg-green-100 text-green-700 px-4 py-1.5 rounded-full ring-1 ring-green-200">
                         Discount: {product.dicountPercentage}%
