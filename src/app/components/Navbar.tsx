@@ -1,4 +1,5 @@
 "use client"
+
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -12,6 +13,7 @@ import { RiArrowDropDownLine } from "react-icons/ri"
 import Logo from "/public/navbar-brand.png"
 import Account from "/public/account.png"
 import { useCart } from "@/context/CartContext"
+import { useUser, UserButton, SignInButton } from "@clerk/nextjs"
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -24,6 +26,7 @@ const Navbar: React.FC = () => {
   const navbarRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const { totalItems } = useCart()
+  const { isSignedIn, user } = useUser()
 
   const categories = [
     {
@@ -34,7 +37,7 @@ const Navbar: React.FC = () => {
     {
       label: "Women",
       href: "/categ/women",
-      keywords: ["women", "female", "ladies", "womens", "lady" , "girl" , "girls" , "woman"],
+      keywords: ["women", "female", "ladies", "womens", "lady", "girl", "girls", "woman"],
     },
     {
       label: "Kids",
@@ -58,25 +61,6 @@ const Navbar: React.FC = () => {
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
-
-  // useEffect(() => {
-  //   let lastScrollY = window.scrollY
-
-  //   const handleScroll = () => {
-  //     const currentScrollY = window.scrollY
-
-  //     if (currentScrollY > lastScrollY) {
-  //       setIsMenuOpen(false)
-  //       setIsSearchOpen(false)
-  //       //setIsShopOpen(false)
-  //     }
-
-  //     lastScrollY = currentScrollY
-  //   }
-
-  //   window.addEventListener("scroll", handleScroll, { passive: true })
-  //   return () => window.removeEventListener("scroll", handleScroll)
-  // }, [])
 
   useEffect(() => {
     if (searchNotification) {
@@ -176,8 +160,22 @@ const Navbar: React.FC = () => {
             <div className="flex items-center gap-6">
               {/* Account */}
               <div className="flex items-center gap-2 text-blue-500">
-                <Image src={Account || "/placeholder.svg"} alt="Account" width={24} height={24} className="w-6 h-6" />
-                <button>Login</button>
+                {isSignedIn ? (
+                  <UserButton afterSignOutUrl="/" />
+                ) : (
+                  <SignInButton mode="modal">
+                    <button className="flex items-center gap-2">
+                      <Image
+                        src={Account || "/placeholder.svg"}
+                        alt="Account"
+                        width={24}
+                        height={24}
+                        className="w-6 h-6"
+                      />
+                      <span>Login</span>
+                    </button>
+                  </SignInButton>
+                )}
               </div>
 
               {/* Desktop Icons */}
@@ -301,7 +299,7 @@ const Navbar: React.FC = () => {
                   ))}
                 </ul>
               )}
-            </form>{" "}
+            </form>
           </div>
         )}
 
@@ -313,10 +311,7 @@ const Navbar: React.FC = () => {
                 Home
               </Link>
               <div>
-                <button
-                  className="flex items-center justify-between w-full py-2 border-b"
-                  //onClick={() => setIsShopOpen(!isShopOpen)}
-                >
+                <button className="flex items-center justify-between w-full py-2 border-b">
                   <Link href="/Shop">Shop</Link>
                 </button>
               </div>
@@ -332,10 +327,25 @@ const Navbar: React.FC = () => {
 
               {/* Mobile Account & Wishlist */}
               <div className="space-y-4 pt-4">
-                <div className="flex items-center gap-2">
-                  <Image src={Account || "/placeholder.svg"} alt="Account" width={24} height={24} className="w-6 h-6" />
-                  <button>Login / Register</button>
-                </div>
+                {isSignedIn ? (
+                  <div className="flex items-center gap-2">
+                    <UserButton afterSignOutUrl="/" />
+                    <span>{user?.fullName || user?.username}</span>
+                  </div>
+                ) : (
+                  <SignInButton mode="modal">
+                    <button className="flex items-center gap-2">
+                      <Image
+                        src={Account || "/placeholder.svg"}
+                        alt="Account"
+                        width={24}
+                        height={24}
+                        className="w-6 h-6"
+                      />
+                      <span>Login / Register</span>
+                    </button>
+                  </SignInButton>
+                )}
                 <Link href="/wishlist" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                   <CiHeart />
                   <span>Wishlist</span>
