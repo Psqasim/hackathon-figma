@@ -251,6 +251,25 @@ const Navbar: React.FC = () => {
               <CiSearch />
             </button>
 
+            {/* Mobile Login/Account */}
+            <div className="text-blue-500">
+              {isSignedIn ? (
+                <UserButton afterSignOutUrl="/" />
+              ) : (
+                <SignInButton mode="modal">
+                  <button>
+                    <Image
+                      src={Account || "/placeholder.svg"}
+                      alt="Account"
+                      width={24}
+                      height={24}
+                      className="w-6 h-6"
+                    />
+                  </button>
+                </SignInButton>
+              )}
+            </div>
+
             {/* Mobile Cart */}
             <Link href="/cart" className="relative text-2xl text-blue-500">
               <MdOutlineShoppingCart />
@@ -331,27 +350,8 @@ const Navbar: React.FC = () => {
                 Checkout
               </Link>
 
-              {/* Mobile Account & Wishlist */}
+              {/* Mobile Wishlist */}
               <div className="space-y-4 pt-4">
-                {isSignedIn ? (
-                  <div className="flex items-center gap-2">
-                    <UserButton afterSignOutUrl="/" />
-                    <span>{user?.fullName || user?.username}</span>
-                  </div>
-                ) : (
-                  <SignInButton mode="modal">
-                    <button className="flex items-center gap-2">
-                      <Image
-                        src={Account || "/placeholder.svg"}
-                        alt="Account"
-                        width={24}
-                        height={24}
-                        className="w-6 h-6"
-                      />
-                      <span>Login / Register</span>
-                    </button>
-                  </SignInButton>
-                )}
                 <Link href="/wishlist" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                   <CiHeart />
                   <span>Wishlist</span>
@@ -379,4 +379,3 @@ const Navbar: React.FC = () => {
 }
 
 export default Navbar
-
