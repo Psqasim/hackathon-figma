@@ -154,6 +154,9 @@ const Navbar: React.FC = () => {
               <Link href="/Contact" className="hover:text-blue-500">
                 Contact
               </Link>
+              <Link href="/checkout" className="hover:text-blue-500">
+                Checkout
+              </Link>
             </ul>
 
             {/* Desktop Right Side Icons */}
@@ -323,6 +326,9 @@ const Navbar: React.FC = () => {
               </Link>
               <Link href="/Contact" className="block py-2 border-b" onClick={() => setIsMenuOpen(false)}>
                 Contact
+              </Link>
+              <Link href="/checkout" className="block py-2 border-b" onClick={() => setIsMenuOpen(false)}>
+                Checkout
               </Link>
 
               {/* Mobile Account & Wishlist */}

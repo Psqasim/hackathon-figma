@@ -1,5 +1,5 @@
 // schemas/categories.js
-export default {
+export const categories ={
     name: 'categories',
     title: 'Categories',
     type: 'document',
@@ -52,3 +52,4 @@ export default {
       },
     ],
   }
+  

@@ -1,18 +1,16 @@
-import "./globals.css"
-import { Inter } from "next/font/google"
-
-import { CartProvider } from "@/context/CartContext"
-import { SanityLive } from "@/sanity/lib/live"
-import { ClerkProvider } from "@clerk/nextjs"
+import "./globals.css";
+import { Inter } from "next/font/google";
+import { CartProvider } from "@/context/CartContext";
 
 
+import ClerkProviderWrapper from "./components/ClerkProviderWrapper";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Ecommerce-2025",
   description: "PS QASIM",
-}
+};
 
 export default function RootLayout({
   children,
@@ -22,13 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ClerkProvider>
+      <ClerkProviderWrapper>
           <CartProvider>
             <main>{children}</main>
-            <SanityLive />
+          
           </CartProvider>
-        </ClerkProvider>
+          </ClerkProviderWrapper>
+        
       </body>
     </html>
-  )
+  );
 }

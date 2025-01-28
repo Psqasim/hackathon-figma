@@ -11,6 +11,7 @@ import Universe from "./components/Universe"
 import FeaturedPosts from "./components/FeaturedPosts"
 import Footer from "./components/Footer"
 
+
 export const revalidate = 0
 
 // Data fetching function
@@ -41,6 +42,7 @@ export default async function Home() {
       <Header />
       <Navbar />
       <main>
+    
         <Hero />
         <Shop />
         <Suspense fallback={<div>Loading products...</div>}>
@@ -51,6 +53,7 @@ export default async function Home() {
         <FeaturedPosts />
       </main>
       <Footer />
+     
     </>
   )
 }
