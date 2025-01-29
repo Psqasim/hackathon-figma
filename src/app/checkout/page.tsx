@@ -1,141 +1,101 @@
-'use client'
-import { useUser } from "@clerk/clerk-react";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+"use client"
 
-const CheckoutPage = () => {
-  const { isSignedIn, user } = useUser();
-  const router = useRouter();
+import { Elements } from "@stripe/react-stripe-js"
+import { loadStripe } from "@stripe/stripe-js"
+import { useSearchParams } from "next/navigation"
+import { useEffect, useState, Suspense } from "react"
+import CheckoutForm from "../components/CheckoutForm"
 
-  const [shippingDetails, setShippingDetails] = useState({
-    fullName: '',
-    address: '',
-    city: '',
-    postalCode: '',
-    phone: '',
-  });
-  const [paymentMethod, setPaymentMethod] = useState('Credit Card');
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Redirect to sign-in page if not signed in
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div className="text-center py-8">Loading checkout...</div>}>
+      <CheckoutContent />
+    </Suspense>
+  )
+}
+
+function CheckoutContent() {
+  const searchParams = useSearchParams()
+  const amountParam = searchParams.get("amount")
+  const [clientSecret, setClientSecret] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const amount = Number.parseFloat(amountParam || "0")
+
   useEffect(() => {
-    if (!isSignedIn) {
-      router.push("/signin");
+    if (!amount || isNaN(amount) || amount <= 0) {
+      setError("Invalid payment amount. Please return to cart.")
+      return
     }
-  }, [isSignedIn, router]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setShippingDetails((prevDetails) => ({
-      ...prevDetails,
-      [name]: value,
-    }));
-  };
+    async function createPaymentIntent() {
+      try {
+        const response = await fetch("/api/create-payment-intent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount: Math.round(amount * 100) }),
+        })
 
-  const handlePaymentMethodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPaymentMethod(e.target.value);
-  };
+        if (!response.ok) {
+          throw new Error("Failed to create payment intent")
+        }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+        const { clientSecret } = await response.json()
+        setClientSecret(clientSecret)
+      } catch (error) {
+        console.error("Payment intent creation failed:", error)
+        setError("Failed to initialize payment. Please try again.")
+      }
+    }
 
-    // Simulate an API call or checkout process
-    setTimeout(() => {
-      setIsSubmitting(false);
-      alert("Checkout successful! Thank you for your purchase.");
-      router.push("/confirmation"); // Redirect to confirmation page
-    }, 2000);
-  };
+    createPaymentIntent()
+  }, [amount])
 
-  if (!isSignedIn) return <div>Loading...</div>;
+  if (error) {
+    return <div className="text-center py-8 text-red-500">{error}</div>
+  }
+
+  if (!clientSecret) {
+    return <div className="text-center py-8">Loading payment gateway...</div>
+  }
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100 p-6">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-        <h1 className="text-3xl font-semibold text-center text-blue-600 mb-6">Checkout</h1>
-        <p className="text-center text-gray-600 mb-4">
-          Welcome back, {user.firstName} {user.lastName}.
-        </p>
+    <div className="min-h-screen bg-gray-100 py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
+        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+          <div className="px-6 py-8">
+            <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">
+              Complete Your Payment
+            </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Shipping Info Section */}
-          <h2 className="text-xl font-medium text-gray-800">Shipping Information</h2>
-          <div className="space-y-2">
-            <input
-              type="text"
-              name="fullName"
-              value={shippingDetails.fullName}
-              onChange={handleChange}
-              placeholder="Full Name"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
-              required
-            />
-            <input
-              type="text"
-              name="address"
-              value={shippingDetails.address}
-              onChange={handleChange}
-              placeholder="Address"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
-              required
-            />
-            <input
-              type="text"
-              name="city"
-              value={shippingDetails.city}
-              onChange={handleChange}
-              placeholder="City"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
-              required
-            />
-            <input
-              type="text"
-              name="postalCode"
-              value={shippingDetails.postalCode}
-              onChange={handleChange}
-              placeholder="Postal Code"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
-              required
-            />
-            <input
-              type="text"
-              name="phone"
-              value={shippingDetails.phone}
-              onChange={handleChange}
-              placeholder="Phone Number"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
+            <div className="mb-8 text-center">
+              <span className="text-2xl font-semibold text-gray-700">
+                Total: ${amount.toFixed(2)}
+              </span>
+            </div>
 
-          {/* Payment Method Section */}
-          <h2 className="text-xl font-medium text-gray-800">Payment Method</h2>
-          <select
-            name="paymentMethod"
-            value={paymentMethod}
-            onChange={handlePaymentMethodChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md"
-          >
-            <option value="Credit Card">Credit Card</option>
-            <option value="PayPal">PayPal</option>
-            <option value="Bank Transfer">Bank Transfer</option>
-          </select>
-
-          {/* Submit Button */}
-          <div className="mt-6 flex justify-center">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
+            <Elements
+              stripe={stripePromise}
+              options={{
+                clientSecret,
+                appearance: { theme: "stripe" },
+              }}
             >
-              {isSubmitting ? "Processing..." : "Complete Checkout"}
-            </button>
+              <CheckoutForm
+                onPaymentSuccess={() => {
+                  // Function implementation
+                }}
+                onClose={() => {
+                  // Function implementation
+                }}
+              />
+            </Elements>
           </div>
-        </form>
+        </div>
       </div>
     </div>
-  );
-};
-
-export default CheckoutPage;
+  )
+}
