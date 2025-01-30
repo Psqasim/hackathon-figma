@@ -29,7 +29,7 @@ async function getProducts() {
     }
   `)
 
-  const selectedIndices = [0, 4, 5, 7, 8, 9, 10, 11, 13, 16, 18, 19]
+  const selectedIndices = [10,16, 18, 19,0, 4, 5, 7, 8, 9,  11, 13]
 
   return selectedIndices.map((index) => products[index]).filter((product): product is Card => product !== undefined)
 }
